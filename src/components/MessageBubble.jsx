@@ -4,10 +4,8 @@ import { User, Bot, Trash2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-// Simple helper for merging tailwind classes
-function cn(...inputs) {
-  return twMerge(clsx(inputs));
-}
+// Simple helper for merging tailwind classes using tailwind-merge
+const cn = (...inputs) => twMerge(clsx(inputs));
 
 // Individual message component
 const MessageBubble = memo(({ id, text, sender, timestamp, onDelete }) => {

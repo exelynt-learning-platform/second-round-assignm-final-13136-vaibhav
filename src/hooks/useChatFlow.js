@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleUserSubmission, restoreHistory, wipeChat, deleteMessage } from '../redux/actions';
+import { STORAGE_KEY } from '../utils/constants';
 
 /**
  * High-level hook to manage the lifecycle and interaction flow of the chat.
@@ -16,12 +17,14 @@ export function useChatFlow() {
 
   // 1. Perspective: Persist chat on every change
   useEffect(() => {
-    localStorage.setItem('multigenysys_chat_history', JSON.stringify(history));
-  }, [history]);
+    if (messages.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    }
+  }, [messages]);
 
   // 2. Hydration: Pull saved chats on first load
   useEffect(() => {
-    const saved = localStorage.getItem('multigenysys_chat_history');
+    const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);

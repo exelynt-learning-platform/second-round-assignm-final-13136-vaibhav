@@ -2,6 +2,7 @@ import React, { useRef, useEffect, memo } from 'react';
 import MessageBubble from './MessageBubble';
 import ThinkingIndicator from './ThinkingIndicator';
 import { AlertCircle, Sparkles } from 'lucide-react';
+import { STARTER_PROMPTS } from '../utils/constants';
 
 /**
  * Scrollable container for the chat history.
@@ -31,7 +32,7 @@ const ChatHistoryArea = ({ messages, isThinking, error, onSelectStarter, onDelet
              <p className="text-sm text-slate-500 max-w-xs mb-8">Start a conversation to see premium AI responses in action.</p>
              
              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full max-w-lg px-6">
-                 {['Hi', 'Hello', 'How are you?', 'What can you do?'].map(txt => (
+                 {STARTER_PROMPTS.map(txt => (
                    <button 
                      key={txt}
                      onClick={() => onSelectStarter(txt)}

@@ -7,9 +7,10 @@ import {
   DELETE_MESSAGE_FROM_CHAT
 } from './actionTypes';
 import { getSmartAIResponse } from '../services/aiChatService';
+import { STORAGE_KEY } from '../utils/constants';
 
-// Generate a quick random ID for each list item
-const createUniqueId = () => `id_${Math.random().toString(36).substr(2, 9)}`;
+// Robust ID generation for chat messages
+const createUniqueId = () => `${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
 
 // Standard Sync Actions
 export const addMessage = (content, role) => ({
@@ -34,7 +35,7 @@ export const setError = (error) => ({
 
 export const wipeChat = () => {
   // Clear persistence layer
-  localStorage.removeItem('multigenysys_chat_history');
+  localStorage.removeItem(STORAGE_KEY);
   return { type: CLEAR_CHAT_HISTORY };
 };
 
@@ -52,11 +53,12 @@ export const deleteMessage = (id) => ({
  * Main thunk to handle the full message cycle
  */
 export const handleUserSubmission = (input) => {
-  return async (dispatch, getState) => {
-    if (!input.trim()) return;
+  return async (dispatch, _getState) => {
+    const trimmedInput = input?.trim();
+    if (!trimmedInput || trimmedInput.length > 2000) return;
 
     // 1. Instantly show user message in UI
-    dispatch(addMessage(input, 'user'));
+    dispatch(addMessage(trimmedInput, 'user'));
     dispatch(setError(null));
 
     // 2. Show the "Thinking" indicator
@@ -64,8 +66,8 @@ export const handleUserSubmission = (input) => {
 
     try {
       // 3. Request response from our AI service
-      const { chat } = getState();
-      const response = await getSmartAIResponse(chat.messages);
+      // Directly pass the user input as recommended in the review
+      const response = await getSmartAIResponse(trimmedInput);
 
       // 4. Add the AI's reply to the chat list
       dispatch(addMessage(response, 'ai'));
