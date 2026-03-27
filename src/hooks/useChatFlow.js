@@ -15,11 +15,15 @@ export function useChatFlow() {
   const loading = useSelector((state) => state.chat.isThinking);
   const error = useSelector((state) => state.chat.errorMessage);
 
-  // 1. Perspective: Persist chat on every change
+  // 1. Perspective: Persist chat on every change (Debounced to improve performance)
   useEffect(() => {
-    if (messages.length > 0) {
+    if (messages.length === 0) return;
+
+    const timeoutId = setTimeout(() => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-    }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
   }, [messages]);
 
   // 2. Hydration: Pull saved chats on first load

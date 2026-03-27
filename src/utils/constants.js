@@ -21,3 +21,5 @@ export const AI_FALLBACK_RESPONSES = [
   "Interesting! I'm seeing a bit of network congestion right now, so I'm giving you this pre-programmed greeting. Try again in 30 seconds!",
   "Hello! I am MultiGenesys. My primary AI services are currently hitting a quota limit, but I am still here to help you navigate the UI."
 ];
+
+export const MAX_INPUT_LENGTH = 2000;

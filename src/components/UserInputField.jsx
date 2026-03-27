@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { SendHorizonal, Trash2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { MAX_INPUT_LENGTH } from '../utils/constants';
 
 // Standard utility for conditional tailwind classes
 function cn(...inputs) {
@@ -44,13 +45,25 @@ const UserInputField = memo(({ onSend, onClear, disabled }) => {
           placeholder="How can I help you today?"
           aria-label="Message input"
           disabled={disabled}
+          maxLength={MAX_INPUT_LENGTH}
           rows={1}
           className={cn(
             "w-full bg-white border border-slate-200 rounded-3xl py-4 pl-6 pr-32 outline-none resize-none transition-all duration-300 min-h-[58px] max-h-32",
             "focus:border-blue-400 focus:ring-4 focus:ring-blue-50 focus:shadow-sm",
+            draft.length >= MAX_INPUT_LENGTH && "border-orange-400 bg-orange-50/30",
             "placeholder:text-slate-300 placeholder:font-medium disabled:bg-slate-50 disabled:text-slate-400"
           )}
         />
+
+        {/* Character Counter (Appears when close to limit) */}
+        {draft.length > (MAX_INPUT_LENGTH - 200) && (
+          <div className={cn(
+            "absolute -top-6 right-4 text-[11px] font-bold tracking-tight px-2 py-0.5 rounded-md",
+            draft.length >= MAX_INPUT_LENGTH ? "text-orange-600 bg-orange-50" : "text-slate-400"
+          )}>
+            {draft.length} / {MAX_INPUT_LENGTH}
+          </div>
+        )}
 
         {/* Action Tray */}
         <div className="absolute right-2 top-2 bottom-2 flex items-center gap-1">
